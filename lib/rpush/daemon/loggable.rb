@@ -5,8 +5,8 @@ module Rpush
         Rpush.logger.debug(app_prefix(msg))
       end
 
-      def log_info(msg, attrs = {})
-        Rpush.logger.info(app_prefix(msg), false, attrs)
+      def log_info(msg, inline = false, attrs = {})
+        Rpush.logger.info(app_prefix(msg), inline, attrs)
       end
 
       def log_warn(msg)
