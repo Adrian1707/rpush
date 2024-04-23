@@ -44,6 +44,7 @@ module Rpush
             request_payload: request_payload,
             response_code: response.code.to_i,
             response_body: response.body,
+            scope: scope,
             outcome: successful_response,
             }
           )
