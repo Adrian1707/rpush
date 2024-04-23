@@ -15,8 +15,15 @@ module Rpush
       log(:debug, msg, inline)
     end
 
-    def info(msg, inline = false)
-      log(:info, msg, inline)
+    def info(msg, inline = false, attrs = {})
+      if defined?(Rails)
+        Rails.logger.info(
+          msg,
+          attrs
+        )
+      else
+        log(:info, msg, inline)
+      end
     end
 
     def error(msg, inline = false)
