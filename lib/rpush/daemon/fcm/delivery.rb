@@ -39,6 +39,7 @@ module Rpush
           request_payload = @notification.as_json.to_json
           successful_response = response.code.to_i == 200
           log_info("FCM API response", false, {
+            event: 'rpush.fcm.api.response',
             request_uri: @uri,
             request_payload: request_payload,
             response_code: response.code.to_i,
