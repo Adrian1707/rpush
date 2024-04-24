@@ -113,7 +113,7 @@ module Rpush
             outcome: outcome_message,
             notification_id: notification.data['notification_id'],
             uri: notification.data['uri'],
-            category: notification.data['category']
+            category: notification.data['category'] || notification.category
             }
           )
           code = response[:code]
