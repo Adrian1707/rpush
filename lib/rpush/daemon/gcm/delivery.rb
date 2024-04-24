@@ -45,7 +45,8 @@ module Rpush
             outcome: outcome_message,
             notification_id: @notification.data['notification_id'],
             uri: @notification.data['uri'],
-            category: @notification.data['category'] || @notification.category
+            category: @notification.data['category'] || @notification.category,
+            device_token: @notification.registration_ids.join(", ")
             }
           )
           case response.code.to_i
