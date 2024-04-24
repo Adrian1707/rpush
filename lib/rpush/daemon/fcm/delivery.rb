@@ -42,7 +42,7 @@ module Rpush
               event: 'rpush.api.response',
               request_uri: @uri,
               platform: 'android',
-              method: 'fcm',
+              notification_service: 'fcm',
               mobile_app: @app.firebase_project_id || ENV['FIREBASE_PROJECT_ID'],
               request_payload: request_payload,
               response_code: response.code.to_i,

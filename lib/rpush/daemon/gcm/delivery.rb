@@ -38,7 +38,7 @@ module Rpush
             event: 'rpush.api.response',
             request_uri: FCM_URI,
             platform: 'android',
-            method: 'gcm',
+            notification_service: 'gcm',
             request_payload: request_payload,
             response_code: response.code.to_i,
             response_body: response.body,

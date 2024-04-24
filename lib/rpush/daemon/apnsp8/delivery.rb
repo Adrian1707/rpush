@@ -105,7 +105,7 @@ module Rpush
             request_uri: @client.uri.to_s + "/3/device/#{notification.device_token}",
             request_payload: request_payload,
             platform: 'ios',
-            method: 'apnsp8',
+            notification_service: 'apnsp8',
             mobile_app: @app.bundle_id,
             request_headers: @headers,
             response_code: response[:code].to_i,
