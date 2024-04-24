@@ -97,6 +97,25 @@ module Rpush
         end
 
         def handle_response(notification, response)
+          request_payload = notification.as_json.to_json
+          outcome_message = response[:code].to_i == 200 ? 'success' : 'failure'
+          @headers['authorization'] = 'bearer <MASKED_TOKEN>'
+          log_info("APNSP8 API response", false, {
+            event: 'rpush.api.response',
+            request_uri: @client.uri.to_s + "/3/device/#{notification.device_token}",
+            request_payload: request_payload,
+            platform: 'ios',
+            method: 'apnsp8',
+            mobile_app: @app.bundle_id,
+            request_headers: @headers,
+            response_code: response[:code].to_i,
+            response_body: response[:failure_reason],
+            outcome: outcome_message,
+            notification_id: notification.data['notification_id'],
+            uri: notification.data['uri'],
+            category: notification.data['category']
+            }
+          )
           code = response[:code]
           case code
           when 200
@@ -142,16 +161,16 @@ module Rpush
         def prepare_headers(notification)
           jwt_token = @token_provider.token
 
-          headers = {}
+          @headers = {}
 
-          headers['content-type'] = 'application/json'
-          headers['apns-expiration'] = '0'
-          headers['apns-priority'] = '10'
-          headers['apns-topic'] = @app.bundle_id
-          headers['authorization'] = "bearer #{jwt_token}"
-          headers['apns-push-type'] = 'background' if notification.content_available?
+          @headers['content-type'] = 'application/json'
+          @headers['apns-expiration'] = '0'
+          @headers['apns-priority'] = '10'
+          @headers['apns-topic'] = @app.bundle_id
+          @headers['authorization'] = "bearer #{jwt_token}"
+          @headers['apns-push-type'] = 'background' if notification.content_available?
 
-          headers.merge notification_data(notification)[HTTP2_HEADERS_KEY] || {}
+          @headers.merge notification_data(notification)[HTTP2_HEADERS_KEY] || {}
         end
 
         def notification_data(notification)
