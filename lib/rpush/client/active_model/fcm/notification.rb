@@ -61,7 +61,9 @@ module Rpush
             # Android does not appear to handle content_available anymore. Instead "priority" should be used
             # with "low" being a background only message. APN however should support this field.
             # json['content_available'] = content_available if content_available
-            json['notification'] = root_notification if notification
+
+            # Adrian override
+            json['notification'] = {uri: data['uri'], title: data['title'], message: data['message']}
             { 'message' => json }
           end
 
