@@ -62,6 +62,7 @@ module Rpush
             # with "low" being a background only message. APN however should support this field.
             # json['content_available'] = content_available if content_available
              json['notification'] = root_notification if notification
+             json['notification'] = { title: data['title'], body: data['message'] }
 
             { 'message' => json }
           end
@@ -90,9 +91,6 @@ module Rpush
             json = notification&.slice(*ANDROID_NOTIFICATION_KEYS) || {}
             json['notification_priority'] = priority_for_notification if priority
             json['sound'] = sound if sound
-            json['uri'] = data['uri']
-            json['title'] = data['title']
-            json['message'] = data['message']
             json['default_sound'] = !sound || sound == 'default' ? true : false
             json
           end
