@@ -32,7 +32,7 @@ module Rpush
         protected
 
         def handle_response(response)
-          request_payload = @notification.as_json.to_json
+          request_payload = @notification.as_json
           outcome_message = response.code.to_i == 200 ? 'success' : 'failure'
           log_info("GCM API response", false, {
             event: 'rpush.api.response',

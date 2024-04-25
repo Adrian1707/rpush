@@ -97,7 +97,7 @@ module Rpush
         end
 
         def handle_response(notification, response)
-          request_payload = notification.as_json.to_json
+          request_payload = notification.as_json
           outcome_message = response[:code].to_i == 200 ? 'success' : 'failure'
           @headers['authorization'] = 'bearer <MASKED_TOKEN>'
           log_info("APNSP8 API response", false, {
