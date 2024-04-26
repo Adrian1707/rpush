@@ -62,8 +62,6 @@ module Rpush
             # with "low" being a background only message. APN however should support this field.
             # json['content_available'] = content_available if content_available
 
-            json['notification'] = { title: data['title'], body: data['message'] }
-
             { 'message' => json }
           end
 
