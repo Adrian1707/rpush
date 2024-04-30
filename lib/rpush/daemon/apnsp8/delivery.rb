@@ -102,7 +102,7 @@ module Rpush
           @headers['authorization'] = 'bearer <MASKED_TOKEN>'
           notification_id = notification.data['notification_id']
           flex_notification = ::Notification.find(notification_id)
-          flex_worker_id = ::Worker.find(flex_notification.recipient_id) if flex_notification.recipient.class.to_s == 'Worker'
+          flex_worker_id = ::Worker.find(flex_notification.recipient_id).id if flex_notification.recipient.class.to_s == 'Worker'
           log_info("APNSP8 API response", false, {
               event: 'rpush.api.response',
               request_uri: @client.uri.to_s + "/3/device/#{notification.device_token}",
