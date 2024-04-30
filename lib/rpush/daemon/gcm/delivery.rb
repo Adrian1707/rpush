@@ -34,6 +34,9 @@ module Rpush
         def handle_response(response)
           request_payload = @notification.as_json
           outcome_message = response.code.to_i == 200 ? 'success' : 'failure'
+          notification_id = @notification.data['notification_id']
+          flex_notification = ::Notification.find(notification_id)
+          flex_worker_id = ::Worker.find(flex_notification.recipient_id) if flex_notification.recipient.class.to_s == 'Worker'
           log_info("GCM API response", false, {
             event: 'rpush.api.response',
             request_uri: FCM_URI,
@@ -46,7 +49,8 @@ module Rpush
             notification_id: @notification.data['notification_id'],
             uri: @notification.data['uri'],
             category: @notification.data['category'] || @notification.category,
-            device_token: @notification.registration_ids.join(", ")
+            device_token: @notification.registration_ids.join(", "),
+            worker_id: flex_worker_id
             }
           )
           case response.code.to_i
