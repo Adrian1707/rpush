@@ -55,6 +55,7 @@ module Rpush
           def as_json(options = nil) # rubocop:disable Metrics/PerceivedComplexity
             json = {
               'data' => data,
+              'android' => android_config,
               'token' => device_token
             }
             # Android does not appear to handle content_available anymore. Instead "priority" should be used
@@ -65,9 +66,8 @@ module Rpush
           end
 
           def android_config
-            json = {
-              'notification' => android_notification,
-            }
+            json = {}
+
             json['collapse_key'] = collapse_key if collapse_key
             json['priority'] = priority_str if priority
             json['ttl'] = "#{expiry}s" if expiry
