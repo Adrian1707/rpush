@@ -55,7 +55,6 @@ module Rpush
           def as_json(options = nil) # rubocop:disable Metrics/PerceivedComplexity
             json = {
               'data' => data,
-              'android' => android_config,
               'token' => device_token
             }
             # Android does not appear to handle content_available anymore. Instead "priority" should be used
