@@ -98,29 +98,21 @@ module Rpush
 
         def handle_response(notification, response)
           request_payload = notification.as_json
-          outcome_message = response[:code].to_i == 200 ? 'success' : 'failure'
           @headers['authorization'] = 'bearer <MASKED_TOKEN>'
-          notification_id = notification.data['notification_id']
-          flex_notification = ::Notification.find(notification_id)
-          flex_worker_id = ::Worker.find(flex_notification.recipient_id).id if flex_notification.recipient.class.to_s == 'Worker'
-          log_info("APNSP8 API response", false, {
-              event: 'rpush.api.response',
-              request_uri: @client.uri.to_s + "/3/device/#{notification.device_token}",
-              request_payload: request_payload,
-              platform: 'ios',
-              notification_service: 'apnsp8',
-              mobile_app: @app.bundle_id,
-              request_headers: @headers,
-              response_code: response[:code].to_i,
-              response_body: response[:failure_reason],
-              outcome: outcome_message,
-              notification_id: notification.data['notification_id'],
-              uri: notification.data['uri'],
-              category: notification.data['category'] || notification.category,
-              device_token: notification.device_token,
-              worker_id: flex_worker_id
-            }
-          )
+
+          Rpush::EventPublisher.publish('rpush.response_handled', {
+            request_uri: @client.uri.to_s + "/3/device/#{notification.device_token}",
+            request_payload: request_payload,
+            platform: 'ios',
+            notification_service: 'apnsp8',
+            mobile_app: @app.bundle_id,
+            request_headers: @headers,
+            response_code: response[:code].to_i,
+            response_body: response[:failure_reason],
+            device_token: notification.device_token,
+            notification_data: notification.data
+          })
+
           code = response[:code]
           case code
           when 200

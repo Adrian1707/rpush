@@ -37,28 +37,20 @@ module Rpush
 
         def handle_response(response)
           request_payload = @notification.as_json
-          outcome_message = response.code.to_i == 200 ? 'success' : 'failure'
-          notification_id = @notification.data['notification_id']
-          flex_notification = ::Notification.find(notification_id)
-          flex_worker_id = ::Worker.find(flex_notification.recipient_id).id if flex_notification.recipient.class.to_s == 'Worker'
-          log_info("FCM API response", false, {
-              event: 'rpush.api.response',
-              request_uri: @uri,
-              platform: 'android',
-              notification_service: 'fcm',
-              mobile_app: @app.firebase_project_id || ENV['FIREBASE_PROJECT_ID'],
-              request_payload: request_payload,
-              response_code: response.code.to_i,
-              response_body: response.body,
-              scope: SCOPE,
-              outcome: outcome_message,
-              notification_id: @notification.data['notification_id'],
-              uri: @notification.data['uri'],
-              category: @notification.data['category'] || @notification.category,
-              device_token: @notification.device_token,
-              worker_id: flex_worker_id
-            }
-          )
+
+          Rpush::EventPublisher.publish('rpush.response_handled', {
+            request_uri: @uri,
+            platform: 'android',
+            notification_service: 'fcm',
+            mobile_app: @app.firebase_project_id || ENV['FIREBASE_PROJECT_ID'],
+            request_payload: request_payload,
+            response_code: response.code.to_i,
+            response_body: response.body,
+            scope: SCOPE,
+            device_token: @notification.device_token,
+            notification_data: @notification.data
+          })
+
           case response.code.to_i
           when 200
             ok
