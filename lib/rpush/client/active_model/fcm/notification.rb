@@ -69,7 +69,7 @@ module Rpush
             json = {}
 
             json['collapse_key'] = collapse_key if collapse_key
-            json['priority'] = priority_str if priority
+            json['priority'] = 'high'
             json['ttl'] = "#{expiry}s" if expiry
             json
           end
